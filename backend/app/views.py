@@ -4,13 +4,7 @@ from app import app, redis_store
 from app.utils import encode_to_base62
 
 
-@app.route('/')
-def index():
-    """ return html with main site content """
-    return render_template('index.html', title='Shorte')
-
-
-@app.route('/sh/<short_code>')
+@app.route('/<short_code>')
 def redirect_to_full_url(short_code):
     """ get full url from redis cache and return redirect """
     full_url = redis_store.get(short_code)
@@ -25,4 +19,4 @@ def get_short_link():
     short_code = encode_to_base62(int(counter))
     redis_store.set(short_code, full_url)
     redis_store.set('counter', int(counter) + 1)
-    return f'http://localhost:5000/sh/{short_code}'
+    return f'http://localhost/{short_code}'

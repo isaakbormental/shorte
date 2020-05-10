@@ -1,6 +1,7 @@
 version: "3"
 services:
   backend:
+    container_name: backend_1
     ports:
       - "5000:5000"
     build:
@@ -14,7 +15,9 @@ services:
       - FLASK_APP=app.py
     volumes:
       - ./backend:/backend
+  #    command: gunicorn -b 0.0.0.0:5000 -w 1 run:app
   redisdb:
+    container_name: redis_1
     image: redis
     ports:
       - "6380"
@@ -22,6 +25,18 @@ services:
       - redis_data:/data
     entrypoint: redis-server --port 6380 --requirepass password --appendonly yes
     restart: always
+  nginx:
+    container_name: nginx_1
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    expose:
+      - 80
+    depends_on:
+      - backend
 
 volumes:
   redis_data:
