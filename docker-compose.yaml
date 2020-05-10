@@ -13,6 +13,7 @@ services:
       - redisdb
     environment:
       - FLASK_APP=app.py
+      - FLASK_CONFIG=deploy
     volumes:
       - ./backend:/backend
   #    command: gunicorn -b 0.0.0.0:5000 -w 1 run:app

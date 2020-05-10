@@ -1,17 +1,17 @@
 from flask import redirect, render_template, request
 
-from app import app, redis_store
-from app.utils import encode_to_base62
+from .. import redis_store
+from .utils import encode_to_base62
+from . import bp
 
-
-@app.route('/<short_code>')
+@bp.route('/<short_code>')
 def redirect_to_full_url(short_code):
     """ get full url from redis cache and return redirect """
     full_url = redis_store.get(short_code)
     return redirect(full_url, code=302)
 
 
-@app.route('/full-url', methods=['POST'])
+@bp.route('/full-url', methods=['POST'])
 def get_short_link():
     """ shorten url by incrementing links counter and encoding it """
     full_url = request.json.get('fullUrl')
