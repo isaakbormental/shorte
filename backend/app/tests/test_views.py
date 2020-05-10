@@ -32,7 +32,7 @@ class TestCreateShortUrl:
         }
         response = client.post('/full-url', json=data)
         assert response.status_code == 400
-        assert response.get_data().decode('utf-8') == 'Not Url'
+        assert response.get_data().decode('utf-8') == 'Please provide valid url'
     
     def test_no_request_data(self, client):
         counter = redis_store.get('counter')

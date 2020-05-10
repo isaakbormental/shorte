@@ -23,10 +23,10 @@ def get_short_link():
     if not full_url:
         return make_response('No url data', 400)
     if len(full_url.split('.')) < 2:
-        return make_response('Not Url', 400)
+        return make_response('Please provide valid url', 400)
     if full_url.split('://')[0] not in ('http', 'https'):
         full_url = 'http://' + full_url
-    print(full_url)
+
     counter = redis_store.get('counter')
     short_code = encode_to_base62(int(counter))
     redis_store.set(short_code, full_url)
