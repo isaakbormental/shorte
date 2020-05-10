@@ -1,0 +1,27 @@
+version: "3"
+services:
+  backend:
+    ports:
+      - "5000:5000"
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    expose:
+      - 5000
+    depends_on:
+      - redisdb
+    environment:
+      - FLASK_APP=app.py
+    volumes:
+      - ./backend:/backend
+  redisdb:
+    image: redis
+    ports:
+      - "6380"
+    volumes:
+      - redis_data:/data
+    entrypoint: redis-server --port 6380 --requirepass password --appendonly yes
+    restart: always
+
+volumes:
+  redis_data:
