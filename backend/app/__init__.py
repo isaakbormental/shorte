@@ -1,13 +1,23 @@
+import os
 from flask import Flask
 from flask_redis import FlaskRedis
-from config import Config
+from config import Config, TestConfig
 
-app = Flask(__name__)
-app.config.from_object(Config)
-redis_store = FlaskRedis(app)
 
-from app import views
+redis_store = FlaskRedis()
 
-counter = redis_store.get('counter')
-if not counter:
-    redis_store.set('counter', int(1e7))
+
+def create_app():
+    app = Flask(__name__)
+    config = TestConfig
+    config_name = os.getenv('FLASK_CONFIG')
+    if config_name:
+        config = Config
+    app.config.from_object(config)
+    redis_store.init_app(app)
+    from .service import bp
+    app.register_blueprint(bp)
+    counter = redis_store.get('counter')
+    if not counter:
+        redis_store.set('counter', int(1e7))
+    return app
